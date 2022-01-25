@@ -1,0 +1,82 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  color: #444;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+main {
+  margin: 3em auto;
+  background-color: whitesmoke;
+  width: 80%;
+  min-height: 95vh;
+  border-radius: 5px;
+  box-shadow: #0001 2px 2px 5px 2px;
+}
+main h1 {
+  padding: 0.5em;
+  width: 100%;
+  background-color: #EEE;
+}
+main #interface {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
+  width: 100%;
+}
+main #interface .currency-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+main #interface .currency-input-container .input-container {
+  border-radius: 2px;
+  box-shadow: #0001 2px 2px 5px 2px;
+  overflow: hidden;
+}
+main #interface .currency-input-container .input-container select, main #interface .currency-input-container .input-container input {
+  outline: none;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0.25em;
+  background-color: #DEDEDE;
+  width: 100%;
+}
+main #extra #extra-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+main #extra #extra-container .card {
+  width: 40%;
+  margin: 1em;
+  background-color: white;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  body main {
+    margin: 1.5em auto;
+    width: 90%;
+  }
+  body #interface {
+    flex-direction: column;
+  }
+  body #interface .currency-input-container {
+    margin: 0 auto;
+    width: 90%;
+  }
+  body #extra #extra-container {
+    display: block;
+  }
+  body #extra #extra-container .card {
+    margin: 0.5em auto;
+    width: 80%;
+  }
+}
