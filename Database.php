@@ -1,4 +1,5 @@
 <?php
+/**/
 const HOST     = 'localhost:3307';
 const PASSWORD = 'Qwe123.';
 const USER     = 'root';
@@ -21,11 +22,11 @@ class CurrencyObject {
 }
 
 // We make a request to retrieve information from the database, if it exists then we know the database is populated.
-function isDataBasePopulated() : bool { 
+function isDataBasePopulated() : bool | null { 
     $db = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
+        return null;
     }
 
     // Get the number of rows and return it as a boolean data type. 0 = false
@@ -35,18 +36,41 @@ function isDataBasePopulated() : bool {
 
 function createTable() {
     // If the table has already been created then then return()
-    //if (database) return false;
+    $db = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
+
+    // If there was an error, report said error and exit the program.
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        return null;
+    }
+
+    // If the table already exists then don't attempt to create it.
+    $result = $db->query("SHOW TABLES LIKE 'currencies'");
+    while($row = mysqli_fetch_assoc($result))
+        if ($row['Tables_in_currencies (currencies)'] === 'currencies') return false;
+
+    // Create table if it doesn't exist.
+    $db->query("
+        CREATE TABLE `currencies` (
+            `id`            INT         NOT NULL AUTO_INCREMENT,
+            `country_name`  VARCHAR(30) NOT NULL,
+            `country_code`  VARCHAR(5)  NOT NULL,
+            `currency_name` VARCHAR(30) NOT NULL,
+            `currency_code` VARCHAR(5)  NOT NULL,
+            `rate_new`      VARCHAR(15) NOT NULL,
+            PRIMARY KEY (`id`));
+    ");
 }
 
 
-function populateDatabase(object $currencies) : bool {
+function populateDatabase(object $currencies) : bool | null {
     // Connect to the database
     $db = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
 
     // If there was an error, report said error and exit the program.
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
+        return null;
     }
     
     // Clean Database
@@ -61,7 +85,7 @@ function populateDatabase(object $currencies) : bool {
         $currencyCode = mysqli_real_escape_string($db, $currency->currencyCode);
 
         $result = $db->query("INSERT INTO currencies.currencies(country_name, country_code, currency_name, currency_code, rate_new)
-                    VALUES('$countryName', '$countryCode', '$countryName', '$countryCode', '{$currency->rateNew}');");
+                              VALUES('$countryName', '$countryCode', '$countryName', '$countryCode', '{$currency->rateNew}');");
     }
 
     // Close Database
@@ -75,7 +99,7 @@ function retrieveAsObject() : array {
     // If there was an error, report said error adn exit the program.
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
+        return null;
     }
 
     // Retrieve all elements from the database.

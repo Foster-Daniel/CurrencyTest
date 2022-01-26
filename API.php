@@ -37,14 +37,16 @@ function phpToJavaScript(object | array $phpObject) : string {
 
 function getData() {
     require_once 'Database.php';
+    createTable();
+
     // Do a check to see if we already have a populated database and if we do retrieve data from it.
-    if (isDataBasePopulated()) $currencies = retrieveAsObject();
+    if ($response = isDataBasePopulated()) $currencies = retrieveAsObject();
     
     // If the database isn't populated, we retrieve the data from an API and then poplate the database
     else {
         $currencies = file_get_contents('http://www.hmrc.gov.uk/softwaredevelopers/rates/exrates-monthly-0122.XML');
         $currencies = new SimpleXMLElement($currencies);
-        populateDatabase($currencies);
+        $response == null && populateDatabase($currencies);
     }
     return $currencies;
 }
