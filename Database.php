@@ -1,5 +1,4 @@
 <?php
-/**/
 const HOST     = 'localhost:3307';
 const PASSWORD = 'Qwe123.';
 const USER     = 'root';
@@ -22,11 +21,11 @@ class CurrencyObject {
 }
 
 // We make a request to retrieve information from the database, if it exists then we know the database is populated.
-function isDataBasePopulated() : bool | null { 
+function isDataBasePopulated() : bool { 
     $db = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        return null;
+        return false;
     }
 
     // Get the number of rows and return it as a boolean data type. 0 = false
@@ -41,7 +40,7 @@ function createTable() {
     // If there was an error, report said error and exit the program.
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        return null;
+        return;
     }
 
     // If the table already exists then don't attempt to create it.
@@ -63,14 +62,14 @@ function createTable() {
 }
 
 
-function populateDatabase(object $currencies) : bool | null {
+function populateDatabase(object $currencies) : bool {
     // Connect to the database
     $db = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
 
     // If there was an error, report said error and exit the program.
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        return null;
+        return false;
     }
     
     // Clean Database
